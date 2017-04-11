@@ -37,7 +37,7 @@ library(dplyr)
 
 ```r
 dataByDate <- group_by(data, date)
-dataByDate <- summarize(dataByDate, steps = sum(steps))
+dataByDate <- summarize(dataByDate, steps = sum(steps, na.rm = T))
 hist(dataByDate$steps, xlab = "Total number of steps per day", main = "Histogram of Total Number of\nSteps per Day", col = "red", ylim = c(0, 30))
 ```
 
@@ -49,7 +49,7 @@ meanTotal
 ```
 
 ```
-## [1] 10766.19
+## [1] 9354.23
 ```
 
 ```r
@@ -58,30 +58,13 @@ medianTotal
 ```
 
 ```
-## [1] 10765
+## [1] 10395
 ```
-We can see that mean for the total number of steps per day is 1.0766189\times 10^{4} and the median is 10765. The median being smaller than the mean.  
+We can see that mean for the total number of steps per day is 9354.2295082 and the median is 10395. The median being smaller than the mean.  
 
 ## What is the average daily activity pattern?
 Now we need to take the average of number of steps taken during each interval for all days. To perform this computation, we again use the ***group_by*** and ***summarize*** methods from the ***dplyr*** package; but this time we group the data by the interval ID rather than the date (remember we are averaging over all days for each interval!). Since there are missing values in our data, we need to use the ***na.rm = TRUE*** option, while computing the mean. 
 We use the ***plot*** function from the R base graphics to plot the mean over all days of steps for each interval. We have used the ***type = "l"*** option to make it a line plot.
-
-```r
-data[data$interval == 5 & data$steps > 0, ]
-```
-
-```
-##      steps       date interval
-## NA      NA       <NA>       NA
-## NA.1    NA       <NA>       NA
-## 2594    18 2012-10-10        5
-## NA.2    NA       <NA>       NA
-## NA.3    NA       <NA>       NA
-## NA.4    NA       <NA>       NA
-## NA.5    NA       <NA>       NA
-## NA.6    NA       <NA>       NA
-## NA.7    NA       <NA>       NA
-```
 
 ```r
 dataByInterval <- group_by(data, interval)
@@ -107,7 +90,8 @@ We use the ***rowSums*** function to compute the number of rows that contain a m
 The only column with missing values in our data is **steps**. We use the average number of steps for each interval, computed in previous step, to replace the missing values. For this purpose we use a ***for*** loop, to go over each row in the dataframe and check whether the "steps" column for that row is a missing value or not. If the value in that cell is ***NA***, we substitute it with the value from the table that we computed in previous step.
 
 ```r
-sum(rowSums(is.na(data)))
+missingValues <- sum(rowSums(is.na(data)))
+missingValues
 ```
 
 ```
@@ -123,6 +107,7 @@ for (row in 1:nrow(data)) {
         }
 }
 ```
+There were initially 2304 values missing from the data that we imputed.  
 After imputing the missing values, we repeat the same operation we performed in the first step to plot a histogram of the total number of steps per day and to compute the mean and median of these values.
 
 ```r
@@ -150,7 +135,7 @@ medianImputed
 ```
 ## [1] 10766.19
 ```
-The mean and median computed in these step are both 1.0766189\times 10^{4}. Note that the mean has not changed from the dataset with missing values but the median has increased from 10765 to 1.0766189\times 10^{4}.  
+The mean and median computed in these step are both 1.0766189\times 10^{4}. Note that these values have both changed from the dataset with missing values (mean: 1.0766189\times 10^{4} vs 9354.2295082, and median: 1.0766189\times 10^{4} vs 10395.  
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
