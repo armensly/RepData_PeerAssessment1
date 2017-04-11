@@ -60,7 +60,7 @@ medianTotal
 ```
 ## [1] 10395
 ```
-We can see that mean for the total number of steps per day is 9354.2295082 and the median is 10395. The median being smaller than the mean.  
+We can see that mean for the total number of steps per day is 9354.2295082 and the median is 10395. The median being larger than the mean.  
 
 ## What is the average daily activity pattern?
 Now we need to take the average of number of steps taken during each interval for all days. To perform this computation, we again use the ***group_by*** and ***summarize*** methods from the ***dplyr*** package; but this time we group the data by the interval ID rather than the date (remember we are averaging over all days for each interval!). Since there are missing values in our data, we need to use the ***na.rm = TRUE*** option, while computing the mean. 
